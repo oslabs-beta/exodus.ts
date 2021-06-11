@@ -6,17 +6,19 @@ import { join } from "../../deps.ts";
 const createSetupTemplate = () => {
   // need to copy the setup config template into the user's current working directory
   return copySync(Deno.realPathSync('../../templates/setup.ts'), join(Deno.cwd(),'setup.ts'))
-}
+}  // copies the setup config template (setup.ts) into current working directory and naming this copy 'setup.ts'
+
+
 
 const createMigrationsDir = () => {
   // need to create the migrations directory, also in the user's cwd
   return ensureDir(join(Deno.cwd(),'migrations')) 
-}
+} // checks if migrations directory exists in cwd, if not then it creates a migrations directory in cwd
 
 
 
 //export an async func(might not need the async func because deno has top await functionality) which 
-export = async () => {
+export const init = async () => {
     //awaits a func that copies the setup config template
   await createSetupTemplate()
     // returns the func that returns the created migration directory
