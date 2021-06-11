@@ -8,9 +8,12 @@ export const create = async (commitMessage:string) => {
 if(existsSync(join(Deno.cwd(),'migrations'))){
   const date = format(new Date(), "yyyy_MM_dd_HH_mm_ss");
   //create a copy the migration template file and place a migration file into the migrations directory which was created from init
-  copySync(Deno.realPathSync('../../templates/migration.ts'), join(Deno.cwd(),`migrations/${date}_migration.ts`))
-}
+  await copySync(Deno.realPathSync('./templates/migration.ts'), join(Deno.cwd(),`migrations/${date}_${Deno.args[1]}.ts`))
+  console.log(`new Exodus migration file created: ${date}_${Deno.args[1]}.ts`);
+} else {
+  console.log('error: need to init first');
   // if it doesn't, throw an error
+}
   // else add file to the migrations directory
 
 }
