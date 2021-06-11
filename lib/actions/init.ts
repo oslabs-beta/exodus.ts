@@ -5,7 +5,7 @@ import { join } from "../../deps.ts";
 
 const createSetupTemplate = () => {
   // need to copy the setup config template into the user's current working directory
-  return copySync(Deno.realPathSync('../../templates/setup.ts'), join(Deno.cwd(),'setup.ts'))
+  return copySync(Deno.realPathSync('./templates/setup.ts'), join(Deno.cwd(),'setup.ts'))
 }  // copies the setup config template (setup.ts) into current working directory and naming this copy 'setup.ts'
 
 

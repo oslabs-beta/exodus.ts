@@ -1,8 +1,9 @@
 // need to import cliffy
 import { Command } from "./deps.ts";
-import init from './lib/actions/init.ts'
-import create from './lib/actions/create.ts'
-
+import {init} from './lib/actions/init.ts'
+import {create} from './lib/actions/create.ts'
+import { databaseConfig } from './lib/configs/databaseConfig.ts'
+import {fwd} from './lib/actions/fwd.ts'
 
 const program = new Command();
 
@@ -26,25 +27,37 @@ program
   .command('create [commitMessage:string]')
   .description('create a new migration file for the current database')
   .action((commitMessage:string) => {
+    create(commitMessage)
     
-  
   })
+  .parse(Deno.args);
+  
 //forward
-.command('forward')
+program
+  .command('forward')
   .description('migrates data up')
   .action(()=>{
-    console.log('Forward not implemented yet')
+    //connect to database here
+    databaseConfig.connect()
+      .then(({client, db}) => {
 
+        fwd(client, db)
+
+      })
+    
+    console.log('Forward not implemented yet')
   })
 
 //back
-.command('back')
+program
+  .command('back')
   .description('migrates data down')
   .action(()=>{
     console.log('Back not implemented yet')
   })
 
 //log
+program
 .command('log')
   .description('lists current migration log')
   .action(()=>{
