@@ -1,3 +1,5 @@
+// deno run --unstable --allow-read --allow-write 
+
 // need to import cliffy
 import { Command } from "./deps.ts";
 import {init} from './lib/actions/init.ts'
@@ -41,11 +43,14 @@ program
     databaseConfig.connect()
       .then(({client, db}) => {
 
-        fwd(client, db)
-
+        fwd(client, db);
+      })
+      .then(migrated=>{
+        console.log('Migrated the following FWD' + migrated);
+        Deno.exit();
       })
     
-    console.log('Forward not implemented yet')
+    
   })
 
 //back
