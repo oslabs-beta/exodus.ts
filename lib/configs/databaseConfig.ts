@@ -37,6 +37,4 @@ export const databaseConfig = {
     
     return {client, db}
   }
-
-
 }
