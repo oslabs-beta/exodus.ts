@@ -1,17 +1,17 @@
-import { Bson, MongoClient } from "../../../deps.ts"
-import { dbConfig } from "../templates/setup.ts"
+import { Bson, MongoClient } from "../../deps.ts"
+import { dbConfig } from "../../templates/setup.ts"
 
 export const databaseConfig = {
 
   async connect() {
     //grab the properties from the exported dbconfig obj to pass into connect
-    const url = dbConfig.servers.host;
+    const url = dbConfig.servers[0].host;
     const dbName = dbConfig.dbName;
     const tls = dbConfig.tls;
-    const port = dbConfig.servers.port;
+    const port = dbConfig.servers[0].port;
     const user = dbConfig.credential.user;
     const pw = dbConfig.credential.pw;
-    const mechanism = dbConfig.credential.mechanism;
+    // const mechanism = dbConfig.credential.mechanism;
     
     const client = new MongoClient();
     
@@ -29,7 +29,7 @@ export const databaseConfig = {
         username: user,
         password: pw,
         db: dbName,
-        mechanism: mechanism,
+        mechanism: "SCRAM-SHA-1"   // make sure to undo this later
       },
     })
 

@@ -1,9 +1,8 @@
 module.exports = {
   async fwd(client, db) {
-    // TODO write your migration here.
-    // See https://github.com/seppevs/migrate-mongo/#creating-a-new-migration-script
-    // Example:
-    // await db.collection('albums').updateOne({artist: 'The Beatles'}, {$set: {blacklisted: true}});
+    
+    await db.collection('food').updateOne({item:'whiskey'}, {$set:{price:25}});
+    console.log('migration executed on food collections and whiskey item')
   },
 
   async back(client, db) {
