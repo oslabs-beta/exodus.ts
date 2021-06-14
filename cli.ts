@@ -1,4 +1,4 @@
-// deno run --unstable --allow-read --allow-write 
+// deno run --unstable --allow-read --allow-write
 
 // need to import cliffy
 import { Command } from "./deps.ts";
@@ -6,6 +6,7 @@ import {init} from './lib/actions/init.ts'
 import {create} from './lib/actions/create.ts'
 import { databaseConfig } from './lib/configs/databaseConfig.ts'
 import {fwd} from './lib/actions/fwd.ts'
+import {back} from './lib/actions/back.ts'
 import { log } from './lib/actions/log.ts'
 
 const program = new Command();
@@ -23,7 +24,7 @@ program
     })
   })
 
-  
+
 
 //create
 program
@@ -31,13 +32,13 @@ program
   .description('create a new migration file for the current database')
   .action((commitMessage:string) => {
     create(commitMessage)
-    
+
   })
-  
-  
+
+
 //forward
 program
-  .command('forward')
+  .command('fwd')
   .description('migrates data up')
   .action(()=>{
     //connect to database here
@@ -46,40 +47,41 @@ program
        return fwd(client, db);
       })
       .then(migrated=>{
-        console.log('Migrated the following FWD ' + migrated);
+        migrated.forEach(ele=>console.log('Migrated the following forward: ' + ele));
         Deno.exit();
-      }) 
+      })
       .catch(err=> console.log(err + ' : ERROR somewhere in forward'))
   })
-  .parse(Deno.args); // may have to move this to the end. parsing still works on previous commands though
+
 //back
 program
   .command('back')
   .description('migrates data down')
   .action(()=>{
-    console.log('Back not implemented yet')
+    //connect to database here
+    databaseConfig.connect()
+      .then(({client, db}) => {
+       return back(client, db);
+      })
+      .then(reverted=>{
+        console.log('Migrated the following back: ' + reverted);
+        Deno.exit();
+      })
+      .catch(err=> console.log(err + ' : ERROR somewhere in back'))
   })
+
 
 //log
 program
 .command('log')
   .description('lists current migration log')
   .action(()=>{
-    //connect to database
-    // databaseConfig.connect()
-    // .then(({db})=>{
-    //   log(db)
-    // })
-    // .then((logStatus))
-
+    // connect to database
+    databaseConfig.connect()
+    .then(({db})=>{
+      return log(db)
+    })
+    .then((logStatus) => {console.log('Here is the current migration log: ',logStatus)})
   })
+  .parse(Deno.args); // parses the user input of all commands
 
-// program
-//   .command('order <pizza:string>', 'ordering pizza')
-//   .option('-c, --cheese [type:string]', 'type of cheese', {default: 'mozarella'})
-//   .option('-s, --sauce [sauce:string]', 'type of sauce', {required:true})
-//   .option('-m, --meat [type:string]', 'meat topping')
-//   .action((options:any, pizza:string)=>{
-//     console.log(`Your ${pizza} has ${options.cheese} ${options.sauce} ${options.meat}`);
-//   })
-//   .parse();

@@ -11,16 +11,21 @@ export const log = async(db:any) => {
 // creates an array of all the documents in the mirgation collection
   const migrationLog = await migrationCollection.find({},{ noCursorTimeout:false }).toArray();
 // applies a func on every file from the migrations folder
-  const logStatus = await Promise.all(files.map(async(file) => {
-    //create a var that is an obj containing the current migration file
-    let doc;
+  const logStatus = await Promise.all(files.map(async (file) => {
+    //create a var that will be a prop on the collection obj
+    let migratedAt:any;
     //finds the first file that matches in the migrationLog(which is an array of docs in migr. coll)
     for(const document of migrationLog){
-      if(document.file === file) doc = document;
+      if(document.file === file){
+        //if the file name matches the file already in the migrationLog assign the migrated at prop
+        migratedAt = document.migratedAt;
+        //return the document
+        return {file, migratedAt}
+      }
     }
-    //create a var which will become a prop on each doc in the mirgationLog collection, assign it to the date/time or pending 
-    const migratedAt = doc ? doc.file.migratedAt.toJSON() : 'PENDING';
-    //return an obj with props of the files name and the mirgatedAt status 
+    //if not
+    migratedAt = 'PENDING';
+    //return an obj with props of the files name and the mirgatedAt status
     return {file, migratedAt}
   }))
   //return the logStatus to be displayed onto the terminal as a table for the user's view(this will be done in the cli)

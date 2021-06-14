@@ -8,14 +8,11 @@ export const fwd = async (client:any, db:any) => {
   const pendingMigrations = allItems.filter(ele => ele.migratedAt === 'PENDING');
 //create a var which will hold the migrated items and be returned to the terminal for the ueser's view
   const migrated:Array<any> = [];
-//create a func that takes in a document 
+//create a func that takes in a document
   const migrateFile = async (document:any) => {
-// get the path of the file name of the document in order to run the migrations defined within that file
-  
     let migrationFile:any;
-   
+    // get the path of the file name of the document in order to run the migrations defined within that file
     migrationFile = await import(`../../migrations/${document.file}`);
-   
     //grab the fwd method within the file to be migrated
     const fwd = migrationFile!.mod.fwd;
     //run the functionality defined in the fwd of the file
@@ -28,7 +25,7 @@ export const fwd = async (client:any, db:any) => {
     const migratedAt = format(new Date(), "yyyy_MM_dd_HH_mm_ss");
     //insert the doc with the specified props into the migrationLog
     await migrationCollection.insertOne({file, migratedAt})
-      // .catch((err:any) => console.log('Error migrating logs'))    
+      // .catch((err:any) => console.log('Error migrating logs'))
       //push the filenames that have been migrated to the migrated array
     migrated.push(file)
 }
@@ -36,7 +33,6 @@ export const fwd = async (client:any, db:any) => {
   for(let doc of pendingMigrations){
     await migrateFile(doc)
   }
- 
 //returns the names of the files that were migrated to the terminal console
   return migrated;
 }
