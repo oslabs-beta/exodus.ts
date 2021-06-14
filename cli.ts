@@ -6,6 +6,7 @@ import {init} from './lib/actions/init.ts'
 import {create} from './lib/actions/create.ts'
 import { databaseConfig } from './lib/configs/databaseConfig.ts'
 import {fwd} from './lib/actions/fwd.ts'
+import { log } from './lib/actions/log.ts'
 
 const program = new Command();
 
@@ -32,7 +33,7 @@ program
     create(commitMessage)
     
   })
-  .parse(Deno.args);
+  
   
 //forward
 program
@@ -42,17 +43,15 @@ program
     //connect to database here
     databaseConfig.connect()
       .then(({client, db}) => {
-
-        fwd(client, db);
+       return fwd(client, db);
       })
       .then(migrated=>{
-        console.log('Migrated the following FWD' + migrated);
+        console.log('Migrated the following FWD ' + migrated);
         Deno.exit();
-      })
-    
-    
+      }) 
+      .catch(err=> console.log(err + ' : ERROR somewhere in forward'))
   })
-
+  .parse(Deno.args); // may have to move this to the end. parsing still works on previous commands though
 //back
 program
   .command('back')
@@ -66,7 +65,13 @@ program
 .command('log')
   .description('lists current migration log')
   .action(()=>{
-    console.log('Log not implemented yet')
+    //connect to database
+    // databaseConfig.connect()
+    // .then(({db})=>{
+    //   log(db)
+    // })
+    // .then((logStatus))
+
   })
 
 // program

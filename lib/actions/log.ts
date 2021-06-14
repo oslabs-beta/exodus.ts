@@ -1,16 +1,15 @@
-export const log = async(db) => {
+import { join } from "../../deps.ts"
 
+export const log = async(db:any) => {
 //gets all the filenames within the migrations folder
-  const files:Array<string> = [];
-  for await (const file of Deno.readDir('../migrations')){
-    if(file.isFile && file.name !== 'migration.ts') files.push(file.name);
+  let files:Array<any> = [];
+  for await (let file of Deno.readDir(join(Deno.cwd(),'migrations'))){
+    if (file.isFile && file.name !== 'migration.ts') files.push(file.name);
   }
 //establishes the connection to the migrationLog connection in mongodb
   const migrationCollection = db.collection('migrationLog');
-  
 // creates an array of all the documents in the mirgation collection
-  const migrationLog = await migrationCollection.find({}).toArray();
-  
+  const migrationLog = await migrationCollection.find({},{ noCursorTimeout:false }).toArray();
 // applies a func on every file from the migrations folder
   const logStatus = await Promise.all(files.map(async(file) => {
     //create a var that is an obj containing the current migration file
@@ -21,7 +20,6 @@ export const log = async(db) => {
     }
     //create a var which will become a prop on each doc in the mirgationLog collection, assign it to the date/time or pending 
     const migratedAt = doc ? doc.file.migratedAt.toJSON() : 'PENDING';
-
     //return an obj with props of the files name and the mirgatedAt status 
     return {file, migratedAt}
   }))
