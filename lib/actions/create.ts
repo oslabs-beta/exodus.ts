@@ -10,12 +10,8 @@ if(existsSync(join(Deno.cwd(),'migrations'))){
   //create a copy the migration template file and place a migration file into the migrations directory which was created from init
   await copySync(Deno.realPathSync('./templates/migration.ts'), join(Deno.cwd(),`migrations/${date}_${Deno.args[1]}.ts`))
   console.log(`new Exodus migration file created: ${date}_${Deno.args[1]}.ts`);
-} else {
+  } else {
   // if it doesn't, throw an error
   console.log('error: need to init first');
+  }
 }
-  // else add file to the migrations directory
-
-}
-
-//console.log(format(new Date(), "yyyy_MM_dd_HH_mm_ss")) // 2021_06_10_16_49_33

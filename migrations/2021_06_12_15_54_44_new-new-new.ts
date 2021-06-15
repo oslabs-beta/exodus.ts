@@ -1,4 +1,4 @@
-export const mod =  {
+export const migration =  {
   async fwd(client:any, db:any) {
 
     await db.collection('food').updateOne({item:'milk'}, {$set:{quantity:100}});

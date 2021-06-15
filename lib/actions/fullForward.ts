@@ -7,7 +7,7 @@ interface Log  {
 }
 
 //export an async func that takes in db and client
-export const fwd = async (client:any, db:any) => {
+export const fullForward = async (client:any, db:any) => {
   //get an array of docs within the migrationLog
   const allItems:Array<Log> = await log(db);
 //grab only the docs with a mirgatedAt/status of pending
@@ -16,7 +16,7 @@ export const fwd = async (client:any, db:any) => {
 
   const pendingMigrations:Array<Log> = allItems.filter((ele:Log) => ele.migratedAt === 'PENDING');
 //create a var which will hold the migrated items and be returned to the terminal for the ueser's view
-  let migrated:string[] = [];
+  const migrated: string[] = [];
 //create a func that takes in a document
   const migrateFile = async <T extends Log>(document:T) => {
     let migrationFile:any;
@@ -36,11 +36,12 @@ export const fwd = async (client:any, db:any) => {
     await migrationCollection.insertOne({file, migratedAt})
       // .catch((err:any) => console.log('Error migrating logs'))
       //push the filenames that have been migrated to the migrated array
-    migrated.push(file);
+    migrated.push(file)
 }
-
-  await migrateFile(pendingMigrations[0]);
-  
+//Runs each pending migration. checks if all fwd migrations in the file that have yet to be migrated(pendingMigrations) are successful and if not should reject if any fwd migration if not successful
+  for(let doc of pendingMigrations){
+    await migrateFile(doc)
+  }
 //returns the names of the files that were migrated to the terminal console
   return migrated;
 }
