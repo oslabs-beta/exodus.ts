@@ -1,10 +1,10 @@
 import { join } from "../../deps.ts"
 
+//interface/(shape of) our documents
 interface Log  {
   file:string,
   migratedAt:string
 }
-
 export const log = async(db:any) => {
 //gets all the filenames within the migrations folder
   let files:Array<string> = [];
