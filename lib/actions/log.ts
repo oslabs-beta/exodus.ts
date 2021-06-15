@@ -1,19 +1,25 @@
 import { join } from "../../deps.ts"
 
+interface Log  {
+  file:string,
+  migratedAt:string
+}
+
 export const log = async(db:any) => {
 //gets all the filenames within the migrations folder
-  let files:Array<any> = [];
+  let files:Array<string> = [];
+
   for await (let file of Deno.readDir(join(Deno.cwd(),'migrations'))){
     if (file.isFile && file.name !== 'migration.ts') files.push(file.name);
   }
 //establishes the connection to the migrationLog connection in mongodb
   const migrationCollection = db.collection('migrationLog');
 // creates an array of all the documents in the mirgation collection
-  const migrationLog = await migrationCollection.find({},{ noCursorTimeout:false }).toArray();
+  const migrationLog: Array<Log> = await migrationCollection.find({},{ noCursorTimeout:false }).toArray();
 // applies a func on every file from the migrations folder
-  const logStatus = await Promise.all(files.map(async (file) => {
+  const logStatus:Array<Log> = await Promise.all(files.map(async (file:string) => {
     //create a var that will be a prop on the collection obj
-    let migratedAt:any;
+    let migratedAt:string;
     //finds the first file that matches in the migrationLog(which is an array of docs in migr. coll)
     for(const document of migrationLog){
       if(document.file === file){
