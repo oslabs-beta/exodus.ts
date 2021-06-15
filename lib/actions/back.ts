@@ -1,11 +1,11 @@
 import { log } from './log.ts'
-//export an async func that takes in db and client
 
+//interface/(shape of) our documents
 interface Log  {
   file:string,
   migratedAt:string
 }
-
+//export an async func that takes in db and client
 export const back = async (client:any, db:any) => {
 //get an array of docs within the migrationLog
   const allItems:Array<Log> = await log(db);
@@ -18,7 +18,7 @@ export const back = async (client:any, db:any) => {
 //check if the most recent migrated item is truthy
   if(latestUpdate){
     //dynamically import that file in order to run the down migrations defined within that file
-    let migrationFile = await import(`../../migrations/${latestUpdate.file}`);
+    let migrationFile = await import('file://' + Deno.cwd()+ `/migrations/${latestUpdate.file}`);
     //assign the async func within the mod obj of that file to a variable
     const back = migrationFile!.migration.back;
     //run the functionality defined in the back func of the file

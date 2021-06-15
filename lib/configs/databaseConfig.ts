@@ -1,9 +1,11 @@
 import { Bson, MongoClient } from "../../deps.ts"
-import { dbConfig } from "../../setup.ts"
+
 
 export const databaseConfig = {
 
   async connect() {
+    let data:any = await import('file://'+ Deno.cwd()+'/setup.ts');
+    const dbConfig = data!.dbConfig;
     //grab the properties from the exported dbconfig obj to pass into connect
     const url:string = dbConfig.servers[0].host;
     const dbName:string = dbConfig.dbName;
@@ -11,10 +13,10 @@ export const databaseConfig = {
     const port:number = dbConfig.servers[0].port;
     const user:string = dbConfig.credential.user;
     const pw:string = dbConfig.credential.pw;
-    
-    
+
+
     const client = new MongoClient();
-    
+
     //initate the connection with MongoDb
     await client.connect({
       db: dbName,
@@ -29,7 +31,7 @@ export const databaseConfig = {
         username: user,
         password: pw,
         db: dbName,
-        mechanism: "SCRAM-SHA-1"   
+        mechanism: "SCRAM-SHA-1"
       },
     })
 

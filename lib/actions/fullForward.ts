@@ -1,19 +1,19 @@
-import { log } from './log.ts'
-import { format } from "../../deps.ts"
+import { log } from './log.ts';
+import { format } from "../../deps.ts";
 
+
+//interface/(shape of) our documents
 interface Log  {
   file:string,
   migratedAt:string
 }
-
 //export an async func that takes in db and client
 export const fullForward = async (client:any, db:any) => {
   //get an array of docs within the migrationLog
   const allItems:Array<Log> = await log(db);
-//grab only the docs with a mirgatedAt/status of pending
-
+  //if the last item's mirgatedAt prop in from allitems array is not pending that maeans all forward migrations have been made
   if (allItems[allItems.length-1].migratedAt !=='PENDING') console.log('Migrations already up to date');
-
+  //grab only the docs with a mirgatedAt/status of pending
   const pendingMigrations:Array<Log> = allItems.filter((ele:Log) => ele.migratedAt === 'PENDING');
 //create a var which will hold the migrated items and be returned to the terminal for the ueser's view
   const migrated: string[] = [];
@@ -21,7 +21,7 @@ export const fullForward = async (client:any, db:any) => {
   const migrateFile = async <T extends Log>(document:T) => {
     let migrationFile:any;
     // get the path of the file name of the document in order to run the migrations defined within that file
-    migrationFile = await import(`../../migrations/${document.file}`);
+    migrationFile = await import('file://' + Deno.cwd() + `/migrations/${document.file}`);
     //grab the fwd method within the file to be migrated
     const fwd = migrationFile!.migration.fwd;
     //run the functionality defined in the fwd of the file
