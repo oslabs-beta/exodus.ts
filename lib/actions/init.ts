@@ -1,6 +1,6 @@
 // need path (join and __dirname) and fs (copy and mkdirs) and whatever the equivalent of process.cwd() is
 import { ensureDir } from "../../deps.ts";
-import { join } from "../../deps.ts";
+import { join, resolve } from "../../deps.ts";
 
 const createSetupTemplate = async () => {
   // need to copy the setup config template into the user's current working directory
