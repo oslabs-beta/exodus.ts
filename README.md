@@ -55,12 +55,8 @@ deno run -A --unstable https://deno.land/x/exodus@0.1.2/cli.ts back
 
 You can display the current status of your migrations
 
-<<<<<<< HEAD
-- `log` : Log - Displays a table of current migrations pending and migrations applied
-=======
 - `log` : Displays a table of current migrations pending and migrations applied. This log data is retrieved from the migrationLog collections in your database.
 
 ```shell
 deno run -A --unstable https://deno.land/x/exodus@0.1.2/cli.ts log
 ```
->>>>>>> b241fc1eb4fe95c7f87ea12aeeee22e36b6ff7ab
