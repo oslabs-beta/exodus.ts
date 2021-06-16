@@ -8,7 +8,7 @@ export const create = async (commitMessage:string) => {
 if(existsSync(join(Deno.cwd(),'migrations'))){
   const date = format(new Date(), "yyyy_MM_dd_HH_mm_ss");
   //create a copy the migration template file and place a migration file into the migrations directory which was created from init
-  const res = await fetch("https://raw.githubusercontent.com/miguel-garibay/exodus.ts/main/templates/migration.ts");
+  const res = await fetch("https://raw.githubusercontent.com/miguel-garibay/exodus.ts/V0.1.2/templates/migration.ts");
   await Deno.writeTextFile(join(Deno.cwd(), `migrations/${date}_${Deno.args[1]}.ts`), await res.text());
 
   console.log(`new Exodus migration file created: ${date}_${Deno.args[1]}.ts`);
