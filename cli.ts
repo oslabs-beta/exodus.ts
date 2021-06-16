@@ -110,7 +110,6 @@ program
         return log(db);
       })
       .then((logStatus) => {
-        // console.log(logStatus)
         const table: Table = new Table();
         logStatus.forEach(ele=>table.push([ele.file,ele.migratedAt]));
         table.header(["Migration File", "Migrated On"])
@@ -135,7 +134,7 @@ program
         table.padding(3)
         table.indent(20)
         table.render()
-        // console.log(table.toString())
+        Deno.exit();
       });
   })
   .parse(Deno.args); // parses the user input of all commands
