@@ -1,13 +1,13 @@
 export const migration = {
   async fwd(client:any, db:any) {
-    
-    await db.collection('food').updateOne({item:'whiskey'}, {$set:{price:25}});
-    console.log('migration executed on food collections and whiskey item')
+    // write the statements to forward your migration here 
+    // Example:
+    // await db.collection('food').updateOne({item: 'boba'}, {$set: {price: 25}});
   },
 
   async back(client:any, db:any) {
-    // TODO write the statements to rollback your migration (if possible)
+    // write the statements to rollback your migration here (if possible)
     // Example:
-    // await db.collection('albums').updateOne({artist: 'The Beatles'}, {$set: {blacklisted: false}});
+    // await db.collection('food').updateOne({item: 'boba'}, {$set: {price: 0}});
   },
 };
