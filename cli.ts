@@ -9,6 +9,7 @@ import { fwd } from "./lib/actions/fwd.ts";
 import { back } from "./lib/actions/back.ts";
 import { log } from "./lib/actions/log.ts";
 import { fullForward } from "./lib/actions/fullForward.ts";
+import { history } from './lib/actions/history.ts';
 
 const program = new Command();
 
@@ -51,6 +52,7 @@ program
         migrated.forEach((ele: any) =>
           console.log("Migrated the following forward: " + ele)
         );
+        history(migrated, 'Forward');
         Deno.exit();
       })
       .catch((err) => console.log(err + " : ERROR somewhere in forward"));
@@ -71,7 +73,9 @@ program
         //show a list of the upgraded migrated files
         migrated.forEach((ele: any) =>
           console.log("Migrated the following forward: " + ele)
+
         );
+        history(migrated, 'Full');
         Deno.exit();
       })
       .catch((err) => console.log(err + " : ERROR somewhere in full forward"));
@@ -93,6 +97,7 @@ program
         reverted.forEach((ele: any) =>
           console.log("Migrated the following back: " + ele)
         );
+        history(reverted,'Back');
         Deno.exit();
       })
       .catch((err) => console.log(err + " : ERROR somewhere in back"));
