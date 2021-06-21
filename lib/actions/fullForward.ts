@@ -12,7 +12,11 @@ export const fullForward = async (client:any, db:any) => {
   //get an array of docs within the migrationLog
   const allItems:Array<Log> = await log(db);
   //if the last item's mirgatedAt prop in from allitems array is not pending that maeans all forward migrations have been made
-  if (allItems[allItems.length-1].migratedAt !=='PENDING') console.log('Migrations already up to date');
+  if (allItems[allItems.length-1].migratedAt !=='PENDING') {
+    console.log('Migrations already up to date');
+    const emptyArray:Array<string>= [];
+    return emptyArray;
+  }
   //grab only the docs with a mirgatedAt/status of pending
   const pendingMigrations:Array<Log> = allItems.filter((ele:Log) => ele.migratedAt === 'PENDING');
 //create a var which will hold the migrated items and be returned to the terminal for the ueser's view

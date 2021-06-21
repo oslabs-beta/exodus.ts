@@ -1,4 +1,4 @@
-// deno run --unstable --allow-read --allow-write --allow-net
+// deno test --unstable --allow-read --allow-write --allow-net test/action_test.ts
 
 // need to import cliffy
 import { Command, Table } from "./deps.ts";
@@ -75,7 +75,6 @@ program
         //show a list of the upgraded migrated files
         migrated.forEach((ele: any) =>
           console.log("Migrated the following forward: " + ele)
-
         );
         history(migrated, 'Full');
         Deno.exit();
