@@ -34,7 +34,7 @@ deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts create commitMess
 ```
 ### Running Migrations
 
-You may choose to apply migrations incrementally or all at once using the `fwd` or `full` commands respectively. For every successful migration applied, a log document will be created and stored in a 'migrationLog' collection within the database.
+You may choose to apply migrations incrementally or all at once using the `fwd` or `full` commands respectively. For every successful migration file a log document will be created and stored in a 'migrationLog' collection within the database. Avoid manually altering these log files if possible, as exodus uses them to keep track of the current state of the migrations. 
 
 - `fwd` : Applies the next pending migration
 ```shell
@@ -52,8 +52,6 @@ Rollingback changes is done incrementally. Successful rollbacks will delete the 
 deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts back
 ```
 
-
-
 ### Checking Applied Migrations
 
 You can display the current status of your migrations
@@ -63,3 +61,5 @@ You can display the current status of your migrations
 ```shell
 deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts log
 ```
+
+Migrations will create an `exodusLog.txt` locally (cwd) that will keep a complete history of all migrations applied / rolled back. Unlike the migrationLog documents this file is non-essential to exodus and can be removed without affecting any features.

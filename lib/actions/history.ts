@@ -2,8 +2,8 @@
 import { format,join,resolve } from "../../deps.ts";
 
 
-export const history = async (migrationLogs: Array<string>, direction:string) => {
-
+export const history = async (migrationLogs: Array<string>, direction:string, logName:string='exodusLog.txt') => {
+  
   if (migrationLogs.length>0) {
 
     let date = format(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -14,8 +14,8 @@ export const history = async (migrationLogs: Array<string>, direction:string) =>
       newHistory=newHistory + '\n'+ele;
     })
 
-    Deno.writeTextFileSync(resolve(Deno.cwd(),"exodusLog.txt"), `${date}`, {append: true});
-    Deno.writeTextFileSync(resolve(Deno.cwd(),"exodusLog.txt"), `${newHistory}`,{append: true});
+    Deno.writeTextFileSync(resolve(Deno.cwd(),logName), `${date}`, {append: true});
+    Deno.writeTextFileSync(resolve(Deno.cwd(),logName), `${newHistory}`,{append: true});
   
   }
 return migrationLogs; 
