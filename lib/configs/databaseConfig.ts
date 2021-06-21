@@ -3,8 +3,14 @@ import { Bson, MongoClient } from "../../deps.ts"
 
 export const databaseConfig = {
 
-  async connect() {
-    let data:any = await import('file://'+ Deno.cwd()+'/setup.ts');
+  async connect( normal : boolean = true) {
+    let data:any
+    if (normal===true) {
+      data = await import('file://'+ Deno.cwd()+'/setup.ts');
+    } if (normal===false) {
+      data = await import('file://'+ Deno.cwd()+'/setupTest.ts');
+    }
+
     const dbConfig = data!.dbConfig;
     //grab the properties from the exported dbconfig obj to pass into connect
     const url:string = dbConfig.servers[0].host;

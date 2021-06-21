@@ -17,10 +17,11 @@ const program = new Command();
 
 //init
 program
-  .command("init")
+  .command("init [test:string]")
   .description("initialize a new Exodus migration project")
   .action(() => {
     //run the functionality of the init file
+    // if you pass in 'test' after init, it'll instead create a seperate setupTest.ts file that the tests use
     init()
       .then(() => {
         console.log("New Exodus migration initialized");
@@ -32,6 +33,7 @@ program
   .command("create [commitMessage:string]")
   .description("create a new migration file for the current database")
   .action((commitMessage: string) => {
+    console.log(commitMessage)
     //run the functionality of the create file
     create(commitMessage);
   });

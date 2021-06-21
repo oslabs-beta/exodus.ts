@@ -2,6 +2,7 @@
 
 import { assert, assertEquals, existsSync,resolve } from "../deps.ts"
 import {log} from "../lib/actions/log.ts"
+import {fullForward} from "../lib/actions/fullForward.ts"
 import {history} from "../lib/actions/history.ts"
 import { databaseConfig } from "../lib/configs/databaseConfig.ts";
 
@@ -19,9 +20,9 @@ const test = Deno.test
 //  });
 
 // no beforeall statemnets, have to create connection objects before running tests
-const connect= await databaseConfig.connect()
+const connect= await databaseConfig.connect(false)
       .then( ({ client,db }) => {
-        return {db};
+        return {client,db};
       })
 
 // const migrate=await log(connect.db)      
@@ -31,7 +32,8 @@ const connect= await databaseConfig.connect()
 
 test('Log.ts output is array', async()=>{
    const migrate = await log(connect.db)
-   assert(Array.isArray(migrate), )
+   assert(Array.isArray(migrate), 'Is not returning an array')
+   
 })
 
 // Deno.test('Forward returns an array',()=>{
@@ -40,11 +42,11 @@ test('Log.ts output is array', async()=>{
 //   assertEquals(ham,'fat')
 // })
 
-// Deno.test('fullForward returns an array',()=>{
+Deno.test('fullForward returns an array', async ()=>{
 
-//   let ham='fat'
-//   assertEquals(ham,'fat')
-// })
+  const migrate = await fullForward(connect.client,connect.db)
+  assert(Array.isArray(migrate), 'Is not returning an array')
+})
 
 // Deno.test('Back returns an array',()=>{
 
