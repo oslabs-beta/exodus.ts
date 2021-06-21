@@ -1,0 +1,1 @@
+To initiate tests, run 'cli.ts init test' to create a setupTest.ts file. Configure the setupTest.ts with your test database. The tests use setupTest.ts as the database config instead of the normal setup.ts.
