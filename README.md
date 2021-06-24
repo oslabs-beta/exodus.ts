@@ -8,29 +8,29 @@ The following flags should be used before running any command:
 <p><strong>deno run -A --unstable</strong></p>
 Followed by the version of the cli.ts file:
 
-<p><strong>https://deno.land/x/exodus@0.1.6/cli.ts</strong></p>
+<p><strong>https://deno.land/x/exodus@0.1.7/cli.ts</strong></p>
 
 ```shell
-deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts
 ```
 It will also run with the following flags `--unstable --allow-read --allow-write --allow-net` if you wish to be more specific about permissions
 
 ```shell
-deno run --unstable --allow-read --allow-write --allow-net https://deno.land/x/exodus@0.1.6/cli.ts
+deno run --unstable --allow-read --allow-write --allow-net https://deno.land/x/exodus@0.1.7/cli.ts
 ```
 
 
 ### Initializing a Project
 - `init` : Initializes a new Exodus migration project by generating a `/migrations` directory and a `setup.ts` file in the <b>current working directory</b>. Modify the `setup.ts` with your MongoDB database connection information. Exodus uses the settings in this file to connect to your database.
 ```shell
-deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts init
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts init
 ```
 
 ### Creating Migrations
 
 - `create` `[commitMessage]`: Creates a new migration file in the `/migrations` directory containing a template for `fwd` and `back` functionality
 ```shell
-deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts create commitMessage
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts create commitMessage
 ```
 ### Running Migrations
 
@@ -38,18 +38,18 @@ You may choose to apply migrations incrementally or all at once using the `fwd` 
 
 - `fwd` : Applies the next pending migration
 ```shell
-deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts fwd
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts fwd
 ```
 - `full` : Applies all pending migrations
 ```shell
-deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts full
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts full
 ```
 
 Rollingback changes is done incrementally. Successful rollbacks will delete the associated log file from the migrationLog collection.
 
 - `back` : Rollback changes of last applied migration
 ```shell
-deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts back
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts back
 ```
 
 ### Checking Applied Migrations
@@ -59,7 +59,27 @@ You can display the current status of your migrations
 - `log` : Displays a table of current migrations pending and migrations applied. This log data is retrieved from the migrationLog collections in your database.
 
 ```shell
-deno run -A --unstable https://deno.land/x/exodus@0.1.6/cli.ts log
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts log
 ```
 
 Migrations will create an `exodusLog.txt` locally (cwd) that will keep a complete history of all migrations applied / rolled back. Unlike the migrationLog documents this file is non-essential to exodus and can be removed without affecting any features.
+
+
+
+## Full Database Migration Usage
+
+### Initializing a Migration
+- `dbInit` : Initializes a new Exodus migration by generating a `/database-migration` directory and a `setupExtract.ts` and `setupApply.ts` file in the <b>current working directory</b>. Modify the `setupExtract.ts` with your MongoDB database connection information inorder to pull the data you would like to migrate. Modify the `setupApply.ts` with your second MongoDB database connection information in order to apply the data you would like to migrate. Exodus uses the settings in these files to connect to your database.
+```shell
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts dbInit
+```
+### Extracting Data
+- `extract` : Extracts the data of an existing MongoDB database and creates a directory with a corresponding name to the extracted database. Within said directory, a `data` folder is generated populated by files containing the data of each collection in the extracted database.
+```shell
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts extract
+```
+### Applying/Migrating Data
+- `apply` : Applies the extracted data to the database specified in the `setupApply.ts` file. During application to the new database, apply removes the MongoDB given id from each document, however if the user would like to keep a custom id simply add the argument of `apply [ keepId ]` to do so.
+```shell
+deno run -A --unstable https://deno.land/x/exodus@0.1.7/cli.ts apply
+```

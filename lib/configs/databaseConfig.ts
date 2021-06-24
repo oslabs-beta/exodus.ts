@@ -3,12 +3,16 @@ import { Bson, MongoClient } from "../../deps.ts"
 
 export const databaseConfig = {
 
-  async connect( normal : boolean = true) {
+  async connect( normal:string = 'normal') {
     let data:any
-    if (normal===true) {
+    if (normal==='normal') {
       data = await import('file://'+ Deno.cwd()+'/setup.ts');
-    } if (normal===false) {
+    } if (normal==='test') {
       data = await import('file://'+ Deno.cwd()+'/setupTest.ts');
+    } if (normal==='extract') {
+      data = await import('file://'+ Deno.cwd()+'/setupExtract.ts');
+    } if (normal==='apply') {
+      data = await import('file://'+ Deno.cwd()+'/setupApply.ts');
     }
 
     const dbConfig = data!.dbConfig;
@@ -42,6 +46,6 @@ export const databaseConfig = {
     })
 
     const db = client.database(dbName);
-    return {client, db}
+    return {client, db, dbName}
   }
 }

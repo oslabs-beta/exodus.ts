@@ -1,5 +1,4 @@
-
-import { format,join,resolve } from "../../deps.ts";
+import { format,resolve } from "../../deps.ts";
 
 
 export const history = async (migrationLogs: Array<string>, direction:string, logName:string='exodusLog.txt') => {

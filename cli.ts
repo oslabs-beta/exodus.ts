@@ -1,8 +1,7 @@
-// deno test --unstable --allow-read --allow-write --allow-net test/action_test.ts
-
-// need to import cliffy
+// deno run --unstable --allow-read --allow-write --allow-net cli.ts
 import { Command, Table } from "./deps.ts";
 import { init } from "./lib/actions/init.ts";
+import { dbInit } from './lib/actions/dbInit.ts'
 import { create } from "./lib/actions/create.ts";
 import { databaseConfig } from "./lib/configs/databaseConfig.ts";
 import { fwd } from "./lib/actions/fwd.ts";
@@ -10,6 +9,8 @@ import { back } from "./lib/actions/back.ts";
 import { log } from "./lib/actions/log.ts";
 import { fullForward } from "./lib/actions/fullForward.ts";
 import { history } from './lib/actions/history.ts';
+import { dbExtract } from "./lib/actions/dbExtract.ts";
+import { dbApply } from "./lib/actions/dbApply.ts";
 
 const program = new Command();
 
@@ -28,12 +29,24 @@ program
       });
   });
 
+//full db migration init
+program
+  .command("dbInit")
+  .description("initialize a new Exodus FUll database migration project")
+  .action(() => {
+    //run the functionality of the dbInit file
+    dbInit()
+      .then(() => {
+        console.log("New Exodus FUll database migration initialized");
+      });
+  });
+
+
 //create
 program
   .command("create [commitMessage:string]")
   .description("create a new migration file for the current database")
   .action((commitMessage: string) => {
-    console.log(commitMessage)
     //run the functionality of the create file
     create(commitMessage);
   });
@@ -59,7 +72,37 @@ program
       })
       .catch((err) => console.log(err + " : ERROR somewhere in forward"));
   });
-
+// extract
+program
+.command("extract")
+.description("extracts data")
+.action(() => {
+  //connect to database here
+  databaseConfig.connect('extract')
+    .then(({ client, db, dbName }) => {
+      //run the functionality of the extract file
+      dbExtract(db, dbName);
+      console.log('Exodus Success: Database extracted')
+  
+    })
+    .catch((err) => console.log(err + " : ERROR somewhere in extract"));
+  })
+    
+//apply 
+program
+.command("apply [keepId:string]")
+.description("applies data")
+.action(() => {
+  //connect to database here
+  databaseConfig.connect('apply')
+    .then(async ({ client, db, dbName }) => {
+      //run the functionality of the dbApply file
+       await dbApply(db);
+       console.log('Exodus Success: Database migration applied!')
+    })
+    .catch((err) => console.log(err + " : ERROR somewhere in apply"));
+  })
+    
 //full forward
 program
   .command("full")
