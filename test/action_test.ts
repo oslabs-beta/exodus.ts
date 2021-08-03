@@ -1,4 +1,4 @@
-// // deno test --unstable --allow-read --allow-write --allow-net test/action_test.ts
+// deno test --unstable --allow-read --allow-write --allow-net test/action_test.ts
 
 import { assert, assertEquals, existsSync,resolve } from "../deps.ts"
 import {log} from "../lib/actions/log.ts"
@@ -10,10 +10,7 @@ import { back } from "../lib/actions/back.ts";
 
 // WARNING: Before running any tests change server settings to test server.
 
-
 const test = Deno.test
-
-// no beforeall statements, have to create connection objects before running tests
 
 const connect= await databaseConfig.connect('test')
       .then( ({ client,db }) => {
@@ -48,16 +45,16 @@ test('Back returns an array', async ()=>{
 
 test('History function creates and writes to testLog.txt', async ()=>{
 
-  let fileExists = existsSync(resolve(Deno.cwd(),'testLog.txt')) // checks if testLog.txt exists and if it does, deletes it prior to test
+  let fileExists = existsSync(resolve(Deno.cwd(),'testLog.txt')) 
   if (fileExists) Deno.removeSync(resolve(Deno.cwd(),'testLog.txt'));
 
   const log = ['2021_06_20_15_19_22_testMigration.ts']
-  history(log,'direction','testLog.txt')  // should create a testLog.txt with the contents of the 'log' variable
+  history(log,'direction','testLog.txt') 
 
-  fileExists = existsSync(resolve(Deno.cwd(),'testLog.txt')) // returns true if testLog.txt was created
+  fileExists = existsSync(resolve(Deno.cwd(),'testLog.txt'))
   assert(fileExists,'File does not exist')
 
-  const text:string = Deno.readTextFileSync(resolve(Deno.cwd(),'testLog.txt')) // reads testLog.txt
+  const text:string = Deno.readTextFileSync(resolve(Deno.cwd(),'testLog.txt')) 
   assert(text.includes(log[0]), 'migration performed was not written to testLog.txt')
 
   Deno.removeSync(resolve(Deno.cwd(),'testLog.txt'));

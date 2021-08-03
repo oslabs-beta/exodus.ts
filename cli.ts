@@ -1,4 +1,5 @@
 // deno run --unstable --allow-read --allow-write --allow-net cli.ts
+
 import { Command, Table } from "./deps.ts";
 import { init } from "./lib/actions/init.ts";
 import { dbInit } from './lib/actions/dbInit.ts'
@@ -14,15 +15,16 @@ import { dbApply } from "./lib/actions/dbApply.ts";
 
 const program = new Command();
 
-// create commands for each action initializing program for each
+//  Key 
+//    databaseConfig.connect()  - connects to database
+//     .then(({ client, db }) => {return <action> (client, db);})  - runs selected action
+//       .then((<actionReturn>) => returns output of action, usually an array of actions taken
 
 //init
 program
   .command("init [test:string]")
   .description("initialize a new Exodus migration project")
-  .action(() => {
-    //run the functionality of the init file
-    // if you pass in 'test' after init, it'll instead create a seperate setupTest.ts file that the tests use
+  .action(() => { // if passed in argument to init is 'test e.g. init('test')), will setup test database config
     init()
       .then(() => {
         console.log("New Exodus migration initialized");
@@ -34,10 +36,9 @@ program
   .command("dbInit")
   .description("initialize a new Exodus FUll database migration project")
   .action(() => {
-    //run the functionality of the dbInit file
     dbInit()
       .then(() => {
-        console.log("New Exodus FUll database migration initialized");
+        console.log("New Exodus Full database migration initialized");
       });
   });
 
@@ -47,7 +48,6 @@ program
   .command("create [commitMessage:string]")
   .description("create a new migration file for the current database")
   .action((commitMessage: string) => {
-    //run the functionality of the create file
     create(commitMessage);
   });
 
@@ -56,14 +56,11 @@ program
   .command("fwd")
   .description(" migrates data up")
   .action(() => {
-    //connect to database here
     databaseConfig.connect()
       .then(({ client, db }) => {
-        //run the functionality of the fwd file
         return fwd(client, db);
       })
       .then((migrated) => {
-        //show a list of the upgraded migrated files
         migrated.forEach((ele: any) =>
           console.log("Migrated the following forward: " + ele)
         );
@@ -72,15 +69,14 @@ program
       })
       .catch((err) => console.log(err + " : ERROR somewhere in forward"));
   });
+
 // extract
 program
 .command("extract")
 .description("extracts data")
 .action(() => {
-  //connect to database here
   databaseConfig.connect('extract')
     .then(({ client, db, dbName }) => {
-      //run the functionality of the extract file
       dbExtract(db, dbName);
       console.log('Exodus Success: Database extracted')
   
@@ -93,10 +89,8 @@ program
 .command("apply [keepId:string]")
 .description("applies data")
 .action(() => {
-  //connect to database here
   databaseConfig.connect('apply')
     .then(async ({ client, db, dbName }) => {
-      //run the functionality of the dbApply file
        await dbApply(db);
        console.log('Exodus Success: Database migration applied!')
     })
@@ -108,14 +102,11 @@ program
   .command("full")
   .description("fully migrates data up")
   .action(() => {
-    //connect to database here
     databaseConfig.connect()
       .then(({ client, db }) => {
-        //run the functionality of the fwd file
         return fullForward(client, db);
       })
       .then((migrated) => {
-        //show a list of the upgraded migrated files
         migrated.forEach((ele: any) =>
           console.log("Migrated the following forward: " + ele)
         );
@@ -130,14 +121,11 @@ program
   .command("back")
   .description("migrates data down")
   .action(() => {
-    //connect to database here
     databaseConfig.connect()
       .then(({ client, db }) => {
-        //run the functionality of the back file
         return back(client, db);
       })
       .then((reverted) => {
-        //show a list of the downgraded migrated files
         reverted.forEach((ele: any) =>
           console.log("Migrated the following back: " + ele)
         );
@@ -152,10 +140,8 @@ program
   .command("log")
   .description("lists current migration log")
   .action(() => {
-    // connect to database
     databaseConfig.connect()
       .then(({ db }) => {
-        //run the functionality of the log file
         return log(db);
       })
       .then((logStatus) => {
@@ -186,4 +172,4 @@ program
         Deno.exit();
       });
   })
-  .parse(Deno.args); // parses the user input of all commands
+  .parse(Deno.args);

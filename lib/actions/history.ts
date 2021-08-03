@@ -1,5 +1,7 @@
 import { format,resolve } from "../../deps.ts";
 
+// creates or appends performed database actions and migrations into a local log file 
+// - '<action> + <date> + <action>' , '<migrationFilesMigrated1>,<migrationFilesMigrated2>, etc.'
 
 export const history = async (migrationLogs: Array<string>, direction:string, logName:string='exodusLog.txt') => {
   
