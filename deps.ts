@@ -1,5 +1,3 @@
-//deps.ts acts as package.json and contains all of our dependencies
-
 export { Command } from "https://deno.land/x/cliffy@v0.19.1/command/mod.ts";
 export {
   copy,
