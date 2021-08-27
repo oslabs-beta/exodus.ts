@@ -1,9 +1,9 @@
-// tests for invalid inputs in config settings.
-// deno test --unstable --allow-read --allow-write --allow-net test/config_test.ts
-
 import { assert, assertEquals } from "../deps.ts"
 import { dbConfig } from "../setup.ts"; // change to setupTest.ts to test the testing setup config and add false as an argument to databaseConfig.connect() => databaseConfig.connect(false)
 import { databaseConfig } from "../lib/configs/databaseConfig.ts"
+
+// tests for invalid inputs in config settings.
+// deno test --unstable --allow-read --allow-write --allow-net test/config_test.ts
 
 Deno.test('cluster URL',()=>{
    assert(typeof dbConfig.servers[0].host==='string', 'Url should be a string');
