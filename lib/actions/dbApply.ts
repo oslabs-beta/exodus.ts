@@ -1,13 +1,11 @@
-//imports
 import { ensureDir, existsSync } from "../../deps.ts"
-// import { writeJSONSync } from "../../deps.ts"
 import { join } from "../../deps.ts";
 
+// Functionality that reads all database collections from the database migrations directory and writes them to the user's selected mongoDB cluster
+// Note: Will only run if databse migrations directory already exists
 export const dbApply = async (db:any) => {
 
-  //check to see if database migration folder exists
   if(existsSync(join(Deno.cwd(),'database-migration'))){
-    // check sub-directories. If subdirectories contain a 'data' folder, iterate through the files and apply to new database
     for await (let folder of Deno.readDir(join(Deno.cwd(),'database-migration'))){
       if (folder.isDirectory){
         for await (let dir of Deno.readDir(join(Deno.cwd(),'database-migration',folder.name))){
@@ -19,8 +17,8 @@ export const dbApply = async (db:any) => {
               if(Deno.args[1] === 'keepId'){
                 //removes the file extension .json
                 db.collection(collection.name.slice(0,collection.name.length-5)).insertMany(data);
-              } else{
-                //removes the file extension .json
+              } 
+              else{
                 data.forEach((el:any) => {delete el._id;})
                 db.collection(collection.name.slice(0,collection.name.length-5)).insertMany(data);
               }
@@ -29,8 +27,8 @@ export const dbApply = async (db:any) => {
         }
       } 
     }
-  }else {
-    // if it doesn't, throw an error
+  }
+  else {
     console.log('error: need to dbInit and extract first');
   }
   return;
